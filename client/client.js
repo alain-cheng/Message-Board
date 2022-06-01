@@ -4,21 +4,14 @@ const PORT = 8005;
 const HOST = '127.0.0.1';
 
 // Client
-const client = dgram.createSocket('udp4');
-const json = new jsonSocket(client, {maxPayload: 496, timeout: 1000});
+const client = dgram.createSocket('udp4'); // create udp socket
+const json = new jsonSocket(client);
 
-client.send("Hello.", PORT, HOST, (err) => {
-    if (err) throw err;
-    console.log('UDP message sent');
-    client.close();
-});
-
-json.send({dummy: 'baka'}, PORT, HOST, (err) => {
+json.send({message: 'Hello World'}, PORT, HOST, (err) => {
     if(err) {
         console.log('error', err);
         return;
     }
-    console.log('Message Sent');
+    console.log('UDP Message Sent');
+    client.close();
 });
-
-//client.send(msg, 0, 12, PORT, HOST);
