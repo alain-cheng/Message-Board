@@ -4,10 +4,15 @@ const HOST = '127.0.0.1';
 
 // Client
 const client = dgram.createSocket('udp4');
-const msg = "How are you!";
+const msg = {
+    "user":"Alan",
+    "msg":"Hello!"
+};
 
-client.send(msg, PORT, HOST, (err) => {
+client.send("Hello.", PORT, HOST, (err) => {
     if (err) throw err;
     console.log('UDP message sent');
     client.close();
 });
+
+//client.send(msg, 0, 12, PORT, HOST);
