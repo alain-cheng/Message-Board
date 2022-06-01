@@ -8,7 +8,6 @@ const msg = "How are you!";
 
 client.send(msg, PORT, HOST, (err) => {
     if (err) throw err;
-
     console.log('UDP message sent');
     client.close();
 });
