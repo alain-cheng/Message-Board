@@ -20,7 +20,7 @@ var User = function(username) {
 readAddress();
 readName();
 
-// Reads ip address to request a connection to
+// Reads ip address to request a connection to a server
 function readAddress() {
     read.question('Enter IP Address of message board server\n> (127.0.0.1) ', address => {
         if(address != "") // leave blank keeps default HOST
@@ -35,7 +35,7 @@ function readName() {
         console.log(`Registering username ${name}`);
         var registeredUser = new User(name);
         clientSend(JSON.stringify(registeredUser));
-        read.close();
+        //read.close();
     });
 }
 

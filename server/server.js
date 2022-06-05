@@ -22,6 +22,7 @@ server.on('listening', () => {
 // Message from client received
 json.on('message-complete', (msg, rinfo) => {
     console.log(`${rinfo.address}:${rinfo.port}`, msg);
+    console.log();
 });
 
 function printUsers(obj) {
