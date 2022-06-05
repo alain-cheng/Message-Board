@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "datagram": "^0.9.2"
+    "datagram": "^0.9.2",
+    "udp-json": "^1.2.1"
   }
 }
