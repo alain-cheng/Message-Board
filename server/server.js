@@ -5,20 +5,9 @@ const PORT = 8005;
 const HOST = '127.0.0.1';
 
 // Objects
-const example = {
-    "key1": "value1",
-    "key2": "value2",
-    "key3": "value3",
-    "key4": 7,
-    "key5": null,
-    "favFriends": ["Kolade", "Nithya", "Dammy", "Jack"],
-    "favPlayers": {"one": "Kante", "two": "Hazard", "three": "Didier"}
-}
-
-const users = [
+const user = [
     {"username": "greg"},
-    {"username": "john"},
-    {"username": "wick"}
+    {"username": "john"}
 ]
 
 // Create UDP socket
@@ -27,14 +16,15 @@ const json = new jsonSocket(server);
 
 server.on('listening', () => {
     console.log('Waiting to receive message...');
-    printObj(users);
+    printUsers(user);
 });
 
+// Message from client received
 json.on('message-complete', (msg, rinfo) => {
     console.log(`${rinfo.address}:${rinfo.port}`, msg);
 });
 
-function printObj(obj) {
+function printUsers(obj) {
     console.log("Users in message board:", obj);
 }
 
