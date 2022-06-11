@@ -12,11 +12,6 @@ var HOST = '127.0.0.1'; // default
 const client = dgram.createSocket('udp4');
 const json = new jsonSocket(client);
 
-// Objects
-var User = function(username) {
-                this.username = username;
-            }
-
 readAddress();
 readName();
 
@@ -33,9 +28,10 @@ function readAddress() {
 function readName() {
     read.question('Enter preferred username\n> ', name => {
         console.log(`Registering username ${name}`);
-        var registeredUser = new User(name);
-        clientSend(JSON.stringify(registeredUser));
-        //read.close();
+        clientSend(JSON.stringify({
+            command: "register",
+            username: name
+        }));
     });
 }
 
@@ -50,7 +46,6 @@ function clientSend(req) {
             console.log('error', err);
             return;
         }
-        //console.log('Message sent successfully');
         client.close();
     });
 }
