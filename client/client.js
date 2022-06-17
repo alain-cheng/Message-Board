@@ -50,7 +50,7 @@ function register() {
         json.send(JSON.stringify({ command: 'register', username: name}), PORT, HOST);
         json.on('message-complete', (msg, rinfo) => {
             msg = JSON.parse(msg);
-            console.log('readName() msg', msg['command']);
+            //console.log('readName() msg', msg);
             if(msg['command'] == 'ret_code') {
                 if(msg['code_no'] == 401) {
                     console.log('Registered Successfully');
@@ -70,7 +70,7 @@ function register() {
 
 /* Allows client to start sending messages to the message board */
 function message() {
-    read.question('Enter message\n>', msg => {
+    read.question('Enter message\n> ', msg => {
         json.send(JSON.stringify({ command: 'msg', username: currUser, message: msg}), PORT, HOST);
 
         if(msg == 'bye') {

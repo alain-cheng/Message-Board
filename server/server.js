@@ -22,13 +22,13 @@ server.on('listening', () => {
 /* Receives all incoming messages from the client */
 json.on('message-complete', (msg, rinfo) => {
     //console.log(`Message received from ${rinfo.address}:${rinfo.port}`);
-    console.log(msg);
-    
+    //console.log(msg);
+
     let data = JSON.parse(msg);
 
     /* Used to process messages and server responds back with a response message to the client */
     if(data['command'] == 'msg') {  
-        console.log()
+        console.log(`from ${data['username']} :`, data['message']);
     } else if(data['command'] ==  'register') {
         if(registerUser(data)) {
             json.send(JSON.stringify({ command: 'ret_code', code_no: 401}), rinfo.port, rinfo.address);
