@@ -1,28 +1,23 @@
 const dgram = require('dgram');
 const jsonSocket = require('udp-json');
-
 const PORT = 8005;
 const HOST = '127.0.0.1';
 
-const users = [ "greg", "john" ];
-
-// Stores the username of the currently logged user
-var currUser;
-
-// Create UDP socket
 const server = dgram.createSocket('udp4');
 const json = new jsonSocket(server);
+
+const users = [ 'greg' ];               // stores existing users
+var currUser;
 
 server.on('listening', () => {
     console.log('Waiting to receive message...');
     printUsers();
 });
 
-
+/* Receives all messages from the client */
 json.on('message-complete', (msg, rinfo) => {
-    /* Receives messages from the client */
-    //console.log(`${rinfo.address}:${rinfo.port}`, JSON.parse(msg));
-    readMsg(msg);
+    console.log(rinfo);
+    readMsg(msg);      // Used to process messages
 });
 
 server.bind(PORT, HOST);
@@ -30,6 +25,28 @@ server.bind(PORT, HOST);
 /*======================================*/
 //      Server Functions below
 /*======================================*/
+
+function readMsg(msg) {
+    /* 
+    Accepts JSON strings which parses and reads 
+    json strings sent by the client.
+
+    This function is also used to determine the type
+    of the message.
+    */
+    console.log('message received', msg);
+    let data = JSON.parse(msg);
+    console.log('data received', data);
+    
+    // Routes the message to an appropriate function
+    if(data['command'] == 'msg') {  
+
+    } else if(data["command"] ==  "register") {
+        registerUser(data);
+    } else if(data["command"] == "deregister") {
+
+    }
+}
 
 function printUsers() {
     /* Prints all existing users stored in the server */
@@ -54,26 +71,4 @@ function registerUser(register) {
         printUsers();
         return true;
     }    
-}
-
-function readMsg(msg) {
-    /* 
-    Accepts JSON strings which parses and reads 
-    json strings sent by the client.
-
-    This function is also used to determine the type
-    of the message.
-    */
-    let data = JSON.parse(msg);
-
-    console.log(data);
-    
-    // Routes the message to an appropriate function
-    if(data['command'] == 'msg') {  
-
-    } else if(data["command"] ==  "register") {
-        registerUser(data);
-    } else if(data["command"] == "deregister") {
-
-    }
 }

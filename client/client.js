@@ -1,30 +1,24 @@
 const dgram = require('dgram');
 const jsonSocket = require('udp-json');
-
+const client = dgram.createSocket('udp4');
+const json = new jsonSocket(client);
 // Module that reads from the console
-const read = require('readline').createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+const read = require('readline').createInterface({ input: process.stdin, output: process.stdout });
 
 // defaults
 var PORT = 8005;
 var HOST = '127.0.0.1';
 
-// Create UDP socket
-const client = dgram.createSocket('udp4');
-const json = new jsonSocket(client);
+/*======================================*/
+//      Process
+/*======================================*/
 
 readAddress();
 readName();
 
-client.on('listening', () => {
-
-});
-
-json.on('message-complete', (msg, rinfo) => {
-    console.log(JSON.parse(msg));
-});
+/*======================================*/
+//      Client Functions below
+/*======================================*/
 
 // Reads ip address to request a connection to a server
 function readAddress() {
@@ -39,10 +33,10 @@ function readAddress() {
 function readName() {
     read.question('Enter preferred username\n> ', name => {
         console.log(`Registering username ${name}`);
-        clientSend({
+        clientSend(JSON.stringify({
             command: 'register',
             username: name
-        });
+        }));
     });
 }
 
@@ -57,7 +51,7 @@ function clientSend(req) {
             console.log('error', err);
             return;
         } else {
-            console.log(res);
+            console.log('response', res);
         }
     });
 }
