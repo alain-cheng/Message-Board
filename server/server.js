@@ -1,3 +1,7 @@
+/*======================================*/
+//      Modules and Initials
+/*======================================*/
+
 const dgram = require('dgram');
 const jsonSocket = require('udp-json');
 const PORT = 8005;
@@ -6,47 +10,43 @@ const HOST = '127.0.0.1';
 const server = dgram.createSocket('udp4');
 const json = new jsonSocket(server);
 
-const users = [ 'greg' ];               // stores existing users
+const users = [ 'greg' ];               // stores message board users
 var currUser;
 
 server.on('listening', () => {
+    console.log(`Server now listening on ${HOST}:${PORT}`);
     console.log('Waiting to receive message...');
     printUsers();
 });
 
-/* Receives all messages from the client */
+/* Receives all incoming messages from the client */
 json.on('message-complete', (msg, rinfo) => {
-    console.log(rinfo);
-    readMsg(msg);      // Used to process messages
+    //console.log(`Message received from ${rinfo.address}:${rinfo.port}`);
+    console.log(msg);
+    
+    let data = JSON.parse(msg);
+
+    /* Used to process messages and server responds back with a response message to the client */
+    if(data['command'] == 'msg') {  
+        console.log()
+    } else if(data['command'] ==  'register') {
+        if(registerUser(data)) {
+            json.send(JSON.stringify({ command: 'ret_code', code_no: 401}), rinfo.port, rinfo.address);
+        } else {
+            json.send(JSON.stringify({ command: 'ret_code', code_no: 502}), rinfo.port, rinfo.address);
+        }
+    } else if(data['command'] == 'deregister') {
+
+    } else {   // unknown command
+        json.send(JSON.stringify({ command: 'ret_code', code_no: 301}), rinfo.port, rinfo.address);
+    }
 });
 
 server.bind(PORT, HOST);
 
 /*======================================*/
-//      Server Functions below
+//      Server Functions
 /*======================================*/
-
-function readMsg(msg) {
-    /* 
-    Accepts JSON strings which parses and reads 
-    json strings sent by the client.
-
-    This function is also used to determine the type
-    of the message.
-    */
-    console.log('message received', msg);
-    let data = JSON.parse(msg);
-    console.log('data received', data);
-    
-    // Routes the message to an appropriate function
-    if(data['command'] == 'msg') {  
-
-    } else if(data["command"] ==  "register") {
-        registerUser(data);
-    } else if(data["command"] == "deregister") {
-
-    }
-}
 
 function printUsers() {
     /* Prints all existing users stored in the server */
@@ -56,18 +56,13 @@ function printUsers() {
 function registerUser(register) {
     /* 
         Function that registers users onto the server,
-        sends {"command":"ret_code", "code_no":401}
-        upon success.
-        
-        Should send an error code to the client when 
-        username already exists in the server
-        {"command":"ret_code", "code_no":502}
+        returns true upon success and false otherwise.
     */
     if(users.includes(register.username)) {
-        console.log("error: Register unsuccessful");
         return false;
     } else {
         users.push(register.username);
+        currUser = register.username;
         printUsers();
         return true;
     }    

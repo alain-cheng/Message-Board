@@ -9,3 +9,6 @@ Project for CSNETWK
 ## Project Folders
 - [`client`](client) 
 - [`server`](server)
+
+## TODOs
+- [ ] task.
