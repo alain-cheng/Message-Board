@@ -4,15 +4,7 @@ const jsonSocket = require('udp-json');
 const PORT = 8005;
 const HOST = '127.0.0.1';
 
-// Objects
-const users = [
-    {
-        "username": "greg"
-    },
-    {
-        "username": "john"
-    }
-]
+const users = [ "greg", "john" ];
 
 // Stores the username of the currently logged user
 var currUser;
@@ -24,12 +16,6 @@ const json = new jsonSocket(server);
 server.on('listening', () => {
     console.log('Waiting to receive message...');
     printUsers();
-    // debugging
-    let debug = users.filter(e => {
-        e.username == "greg"
-    });
-    
-    console.log(debug);
 });
 
 
@@ -39,6 +25,11 @@ json.on('message-complete', (msg, rinfo) => {
     readMsg(msg);
 });
 
+server.bind(PORT, HOST);
+
+/*======================================*/
+//      Server Functions below
+/*======================================*/
 
 function printUsers() {
     /* Prints all existing users stored in the server */
@@ -47,16 +38,19 @@ function printUsers() {
 
 function registerUser(register) {
     /* 
-        Function that registers users onto the server.
+        Function that registers users onto the server,
+        sends {"command":"ret_code", "code_no":401}
+        upon success.
         
         Should send an error code to the client when 
-        username already exists in the server.
+        username already exists in the server
+        {"command":"ret_code", "code_no":502}
     */
-    if(users.includes({username: register.username})) {
+    if(users.includes(register.username)) {
         console.log("error: Register unsuccessful");
         return false;
     } else {
-        users.push({"username": register.username});
+        users.push(register.username);
         printUsers();
         return true;
     }    
@@ -74,7 +68,8 @@ function readMsg(msg) {
 
     console.log(data);
     
-    if(data["command"] == "msg") {
+    // Routes the message to an appropriate function
+    if(data['command'] == 'msg') {  
 
     } else if(data["command"] ==  "register") {
         registerUser(data);
@@ -82,5 +77,3 @@ function readMsg(msg) {
 
     }
 }
-
-server.bind(PORT, HOST);
