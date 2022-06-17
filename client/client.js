@@ -72,16 +72,16 @@ function register() {
 function message() {
     read.question('Enter message\n> ', msg => {
         json.send(JSON.stringify({ command: 'msg', username: currUser, message: msg}), PORT, HOST);
-
         if(msg == 'bye') {
             console.log('Disconnecting');
             exit();
         } else {
-            message();
+            message();      // keep recursing until user enters 'bye'
         }
-    })
+    });
 }
 
+/* Use when deregistering or exiting program */
 function exit() {
     client.close();
 }
