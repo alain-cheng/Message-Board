@@ -1,39 +1,41 @@
 # Message-Board
-Run Server Program on terminal
-> node server
+Project for CSNETWK
 
-Run Client Program on terminal
-> node client
+## TODOs
+- [X] User Registration
+- [ ] User Deregistration
+- [X] Post messages to server
+- [ ] (**optional**) Server to not accept empty messages and returns an appropriate response
+- [ ] Client 'bye' message not being displayed on server
 
-## Nodejs module stuffs
-  **npm init**\
-\
-  **server**\
-  name: package\
-  version: 1.0.0\
-  desription:\
-  main: server.js\
-  author:\
-  license: ISC\
-\
-  **client**\
-  name: package\
-  version: 1.0.0\
-  desription:\
-  main: client.js\
-  author:\
-  license: ISC
+## Modules
+- `datagram` - For **UDP** connections. [api](https://www.npmjs.com/package/datagram)[documentation](https://nodejs.org/api/dgram.html).
+- `udp-json` - Sending and receiving JSON. [api](https://www.npmjs.com/package/udp-json).
+- `readline` - **Client Only**. Used to read inputs from the console. [documentation](https://nodejs.org/api/readline.html).
 
+## Project Folders
+- [`client`](client) 
+- [`server`](server)
 
-  **Modules used**
-  
-1. **npm i datagram** /* To create a UDP connection */\
-  [api](https://www.npmjs.com/package/datagram)\
-  [documentation](https://nodejs.org/api/dgram.html)
+## Sample Program images
+**User 1** registers and sends messages:
 
-2. **npm i udp-json** /* To allow passing and receiving JSON objects between client and server */\
-  [api](https://www.npmjs.com/package/udp-json)
+![Sample 1](misc/sample1.png)
 
-3. **readline module (Client Only)** /* To read user inputs */\
-  [documentation](https://nodejs.org/api/readline.html)
+![Sample 2](misc/sample2.png)
 
+**User 2** registers and sends messages:
+
+![Sample 3](misc/sample3.png)
+
+**Both** users start chatting:
+
+![Sample 4](misc/sample4.png)
+
+**Both** users leave the room:
+
+![Sample 5](misc/sample5.png)
+
+Example of a user with an unsucessful registration:
+
+![Sample 6](misc/sample6.png)

@@ -1,63 +1,87 @@
+/*======================================*/
+//      Modules and Initials
+/*======================================*/
+
 const dgram = require('dgram');
 const jsonSocket = require('udp-json');
+const read = require('readline').createInterface({ input: process.stdin, output: process.stdout });
 
-// Module that reads from the console
-const read = require('readline').createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
-// defaults
-var PORT = 8005;
-var HOST = '127.0.0.1';
-
-// Create UDP socket
 const client = dgram.createSocket('udp4');
 const json = new jsonSocket(client);
+var PORT = 8005;                // defaults
+var HOST = '127.0.0.1';         // defaults
 
-readAddress();
-readName();
+client.on('listening', () => {});
 
-client.on('listening', () => {
+var currUser;
 
-});
-
+/* Receives server responses after the client sends a message */
+/*
 json.on('message-complete', (msg, rinfo) => {
-    console.log(JSON.parse(msg));
-});
+    console.log('msg', msg);
 
-// Reads ip address to request a connection to a server
-function readAddress() {
+});
+*/
+
+/*======================================*/
+//      Process
+/*======================================*/
+
+connect();
+register();
+
+/*======================================*/
+//      Client Functions
+/*======================================*/
+
+/* Reads ip address to request a connection to a server */
+function connect() {
     read.question('Enter IP Address of message board server\n> (127.0.0.1) ', address => {
         if(address != '') // leave blank keeps default HOST
             HOST = address;
-        readName();
+        register();
     });
 }
 
-// Reads the name of the user and sends it to the server
-function readName() {
+/* Reads the name of the user and sends it to the server */
+function register() {
     read.question('Enter preferred username\n> ', name => {
         console.log(`Registering username ${name}`);
-        clientSend({
-            command: 'register',
-            username: name
+        json.send(JSON.stringify({ command: 'register', username: name}), PORT, HOST);
+        json.on('message-complete', (msg, rinfo) => {
+            msg = JSON.parse(msg);
+            //console.log('readName() msg', msg);
+            if(msg['command'] == 'ret_code') {
+                if(msg['code_no'] == 401) {
+                    console.log('Registered Successfully');
+                    currUser = name;
+                    message();
+                } else if(msg['code_no'] == 502) {
+                    console.log('User account already exists in chat room!');
+                    console.log('Unsucessful registration. Exiting..');
+                    exit();
+                } else {
+                    console.error('Unknown error occured');
+                }
+            }
         });
     });
 }
 
-/*
-    Sends   messages   to    the   server
-    This function  accepts  json  objects
-    JSON.stringify() when passing objects
-*/
-function clientSend(req) {
-    json.send(req, PORT, HOST, (err, res) => {
-        if(err) {
-            console.log('error', err);
-            return;
+/* Allows client to start sending messages to the message board */
+function message() {
+    read.question('Enter message\n> ', msg => {
+        json.send(JSON.stringify({ command: 'msg', username: currUser, message: msg}), PORT, HOST);
+        if(msg == 'bye') {
+            console.log('Disconnecting');
+            exit();
         } else {
-            console.log(res);
+            message();      // keep recursing until user enters 'bye'
         }
     });
+}
+
+/* Use when deregistering or exiting program */
+function exit() {
+    client.close();
 }
