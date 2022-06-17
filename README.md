@@ -18,9 +18,24 @@ Project for CSNETWK
 - [`server`](server)
 
 ## Sample Program images
+**User 1** registers and sends messages:
+
 ![Sample 1](misc/sample1.png)
+
 ![Sample 2](misc/sample2.png)
+
+**User 2** registers and sends messages:
+
 ![Sample 3](misc/sample3.png)
+
+**Both** users start chatting:
+
 ![Sample 4](misc/sample4.png)
+
+**Both** users leave the room:
+
 ![Sample 5](misc/sample5.png)
+
+Example of a user with an unsucessful registration:
+
 ![Sample 6](misc/sample6.png)
