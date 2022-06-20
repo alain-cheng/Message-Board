@@ -3,6 +3,7 @@
 /*======================================*/
 
 const dgram = require('dgram');
+const { off } = require('process');
 const jsonSocket = require('udp-json');
 const PORT = 8005;
 const HOST = '127.0.0.1';
@@ -30,7 +31,9 @@ json.on('message-complete', (msg, rinfo) => {
     if(data['command'] == 'msg') {  
         if(data['message'] == '') {
             // If message contents are empty, 
-        } else {
+        } else if(data['message'] == 'bye'){
+            console.log(`from ${data['username']} :`, data['message']);
+        }else {
             console.log(`from ${data['username']} :`, data['message']);
         }
     } else if(data['command'] ==  'register') {
@@ -40,7 +43,9 @@ json.on('message-complete', (msg, rinfo) => {
             json.send(JSON.stringify({ command: 'ret_code', code_no: 502}), rinfo.port, rinfo.address);
         }
     } else if(data['command'] == 'deregister') {
-
+        if(deregisterUser(data)) {
+            json.send(JSON.stringify({ command: 'ret_code', code_no: 603}), rinfo.port, rinfo.address);
+        }
     } else {   // unknown command
         json.send(JSON.stringify({ command: 'ret_code', code_no: 301}), rinfo.port, rinfo.address);
     }
@@ -70,4 +75,15 @@ function registerUser(register) {
         printUsers();
         return true;
     }    
+}
+
+function deregisterUser(register) {
+    /* 
+        Function that deregisters users onto the server,
+        returns true upon success and false otherwise.
+    */
+   if(users.includes(register.username)) {
+        users.pop();
+        printUsers();
+    }
 }

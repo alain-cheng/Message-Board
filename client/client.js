@@ -74,7 +74,19 @@ function message() {
         json.send(JSON.stringify({ command: 'msg', username: currUser, message: msg}), PORT, HOST);
         if(msg == 'bye') {
             console.log('Disconnecting');
-            exit();
+            json.send(JSON.stringify({ command: 'deregister', username: currUser, message: msg}), PORT, HOST);
+            json.on('message-complete', (msg, rinfo) => {
+                msg = JSON.parse(msg);
+                //console.log('readName() msg', msg);
+                if(msg['command'] == 'ret_code') {
+                    if(msg['code_no'] == 603) {
+                        console.log('User' + currUser + ' exiting...');
+                    } else {
+                        console.error('Unknown error occured');
+                    }
+                }
+            });
+            return false;
         } else {
             message();      // keep recursing until user enters 'bye'
         }
