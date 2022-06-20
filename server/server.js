@@ -85,5 +85,6 @@ function deregisterUser(register) {
    if(users.includes(register.username)) {
         users.pop();
         printUsers();
-    }
+        return true;
+    } else return false;
 }
