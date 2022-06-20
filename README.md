@@ -6,7 +6,7 @@ Project for CSNETWK
 - [ ] User Deregistration
 - [X] Post messages to server
 - [ ] (**optional**) Server to not accept empty messages and returns an appropriate response
-- [ ] Client 'bye' message not being displayed on server
+- [X] Client 'bye' message not being displayed on server
 
 ## Modules
 - `datagram` - For **UDP** connections. [api](https://www.npmjs.com/package/datagram) [documentation](https://nodejs.org/api/dgram.html).
