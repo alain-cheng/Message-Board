@@ -1,13 +1,6 @@
 # Message-Board
 Project for CSNETWK
 
-## TODOs
-- [X] User Registration
-- [ ] User Deregistration
-- [X] Post messages to server
-- [ ] (**optional**) Server to not accept empty messages and returns an appropriate response
-- [X] Client 'bye' message not being displayed on server
-
 ## Modules
 - `datagram` - For **UDP** connections. [api](https://www.npmjs.com/package/datagram) [documentation](https://nodejs.org/api/dgram.html).
 - `udp-json` - Sending and receiving JSON. [api](https://www.npmjs.com/package/udp-json).
